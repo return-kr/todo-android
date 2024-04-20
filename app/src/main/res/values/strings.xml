@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Hometask App</string>
+    <string name="get_users">Get Users</string>
+    <string name="insert_user">Insert User</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="add_todo">Add todo</string>
+    <string name="title">Title</string>
+    <string name="body">Body</string>
+    <string name="create">Create</string>
+    <string name="delete_todo">Delete TODO</string>
+    <string name="nothing_to_do">Nothing to do</string>
+</resources>
