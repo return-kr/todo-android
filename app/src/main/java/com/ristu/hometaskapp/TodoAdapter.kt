@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.ristu.hometaskapp.databinding.EmptyTodoLayoutBinding
 import com.ristu.hometaskapp.databinding.TodoItemBinding
 import com.ristu.hometaskapp.model.Todo
 
-class TodoAdapter(private val onClickDelete: (uid: Long) -> Unit) :
+class TodoAdapter(
+    private val onClickTodo: (uid: Long) -> Unit,
+    private val onClickDelete: (uid: Long) -> Unit
+) :
     RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     private var itemList: List<Todo>? = null
@@ -31,6 +33,10 @@ class TodoAdapter(private val onClickDelete: (uid: Long) -> Unit) :
                     when (view.id) {
                         R.id.delete_todo_button -> {
                             itemList?.get(adapterPosition)?.uid?.let { onClickDelete(it) }
+                        }
+
+                        R.id.todo_item_layout -> {
+                            itemList?.get(adapterPosition)?.uid?.let { onClickTodo(it) }
                         }
                     }
                 }

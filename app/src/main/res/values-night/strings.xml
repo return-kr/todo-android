@@ -10,4 +10,5 @@
     <string name="create">Create</string>
     <string name="delete_todo">Delete TODO</string>
     <string name="nothing_to_do">Nothing to do</string>
+    <string name="save">Save</string>
 </resources>

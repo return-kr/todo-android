@@ -10,6 +10,12 @@ interface TodoDao {
     @Query("SELECT * FROM all_todo")
     fun getAllTodo(): List<Todo>
 
+    @Query("SELECT * FROM all_todo WHERE uid = :uid")
+    fun getTodo(uid: Long): Todo
+
+    @Query("UPDATE all_todo SET title = :title, body = :body WHERE uid = :uid")
+    fun updateTodo(title: String, body: String, uid: Long)
+
     @Insert
     fun createTodo(user: Todo)
 

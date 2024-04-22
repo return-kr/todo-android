@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room.databaseBuilder
 import com.ristu.hometaskapp.constant.Constant.Companion.CREATE_TODO
+import com.ristu.hometaskapp.constant.Constant.Companion.UPDATE_TODO
 import com.ristu.hometaskapp.databinding.ActivityMainBinding
 import com.ristu.hometaskapp.db.TodoDao
 import com.ristu.hometaskapp.db.TodoDatabase
@@ -29,12 +30,17 @@ class MainActivity : AppCompatActivity() {
         initValues()
         initDb()
         todoDao = todoDb.getTodoDao()
-        getTodo()
+        getAllTodo()
         binding.apply {
             onItemClick = View.OnClickListener { view ->
                 when (view.id) {
                     R.id.add_todo_button -> {
-                        startActivityForResult(Intent(this@MainActivity, AddTodoActivity::class.java), 999)
+                        startActivityForResult(
+                            Intent(
+                                this@MainActivity,
+                                AddTodoActivity::class.java
+                            ), 999
+                        )
                     }
                 }
             }
@@ -49,12 +55,19 @@ class MainActivity : AppCompatActivity() {
     )
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == CREATE_TODO && data?.getBooleanExtra("isTodoCreated", false) == true) {
-            getTodo()
+        if (resultCode == CREATE_TODO && data?.getBooleanExtra(
+                "isTodoCreated",
+                false
+            ) == true || resultCode == UPDATE_TODO && data?.getBooleanExtra(
+                "isTodoUpdated",
+                false
+            ) == true
+        ) {
+            getAllTodo()
         }
     }
 
-    private fun getTodo() {
+    private fun getAllTodo() {
         lifecycleScope.launch(Dispatchers.IO) {
             val allTodo = todoDao.getAllTodo()
             withContext(Dispatchers.Main) {
@@ -69,15 +82,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initValues() {
-        adapter = TodoAdapter {uid ->
+        adapter = TodoAdapter({ uid ->
+            val intent = Intent(this@MainActivity, TodoViewActivity::class.java)
+            intent.putExtra("UID", uid)
+            startActivityForResult(intent, 111)
+        }, { uid ->
             lifecycleScope.launch(Dispatchers.IO) {
                 todoDao.deleteTodo(uid)
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@MainActivity, "TODO Deleted", Toast.LENGTH_SHORT).show()
-                    getTodo()
+                    getAllTodo()
                 }
             }
-        }
+        })
         binding.apply {
             todoRecyclerView.adapter = adapter
             todoRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
